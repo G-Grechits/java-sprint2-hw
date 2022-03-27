@@ -1,8 +1,8 @@
 public class Task {
-    private String name;
-    private String description;
-    private int id;
-    private String status;
+    protected String name;
+    protected String description;
+    protected int id;
+    protected String status;
 
     public Task(String name, String description, int id, String status) {
         this.name = name;
