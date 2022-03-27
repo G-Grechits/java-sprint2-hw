@@ -74,7 +74,7 @@ public class Manager {
         subtask.setId(++autoId);
         subtaskMap.put(subtask.getId(), subtask);
         if (epicMap.containsKey(subtask.getEpicId())) {
-            epicMap.get(subtask.getEpicId()).getsubtasks().add(subtaskMap.get(subtask.getId()));
+            epicMap.get(subtask.getEpicId()).getsubtasks().add(subtask);
             updateStatusOfEpic(epicMap.get(subtask.getEpicId()));
         }
         return subtask;
