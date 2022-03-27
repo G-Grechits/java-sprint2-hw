@@ -1,3 +1,8 @@
+package manager;
+
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -64,7 +69,7 @@ public class Manager {
     public Epic createEpic(Epic epic) { //метод создания эпика
         epic.setId(++autoId);
         ArrayList<Subtask> subtasks = new ArrayList<>();
-        epic.setsubtasks(subtasks);
+        epic.setSubtasks(subtasks);
         updateStatusOfEpic(epic);
         epicMap.put(epic.getId(), epic);
         return epic;
@@ -74,7 +79,7 @@ public class Manager {
         subtask.setId(++autoId);
         subtaskMap.put(subtask.getId(), subtask);
         if (epicMap.containsKey(subtask.getEpicId())) {
-            epicMap.get(subtask.getEpicId()).getsubtasks().add(subtask);
+            epicMap.get(subtask.getEpicId()).getSubtasks().add(subtask);
             updateStatusOfEpic(epicMap.get(subtask.getEpicId()));
         }
         return subtask;
@@ -101,23 +106,23 @@ public class Manager {
         }
         subtaskMap.put(subtask.getId(), subtask);
         if (epicMap.containsKey(subtask.getEpicId())) {
-            epicMap.get(subtask.getEpicId()).getsubtasks().add(subtaskMap.get(subtask.getId()));
+            epicMap.get(subtask.getEpicId()).getSubtasks().add(subtaskMap.get(subtask.getId()));
             updateStatusOfEpic(epicMap.get(subtask.getEpicId()));
         }
     }
 
     public ArrayList<Subtask> getSubtasksByEpic(int epicId) { //метод получения списка всех подзадач определённого эпика
         if (epicMap.containsKey(epicId)) {
-            return epicMap.get(epicId).getsubtasks();
+            return epicMap.get(epicId).getSubtasks();
         }
         return null;
     }
 
     private void updateStatusOfEpic(Epic epic) { //метод для обновления статуса эпика
-        if (epic.getsubtasks().isEmpty()) {
+        if (epic.getSubtasks().isEmpty()) {
             epic.setStatus(Status.newStatus);
         } else {
-            for (Subtask subtask : epic.getsubtasks()) {
+            for (Subtask subtask : epic.getSubtasks()) {
                 if (subtask.getStatus().equals(Status.newStatus)) {
                     epic.setStatus(Status.newStatus);
                 } else if (subtask.getStatus().equals(Status.done)) {
