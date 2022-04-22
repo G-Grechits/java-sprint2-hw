@@ -4,9 +4,10 @@ import tasks.Epic;
 import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
+
+import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private HashMap<Integer, Task> taskMap = new HashMap<>();
@@ -37,13 +38,22 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllTasks() {
-        taskMap.clear();
+        for (Integer id : taskMap.keySet()) {
+            taskHistory.remove(id); //из истории удалены все запросы по задачам
+        }
+        taskMap.clear(); //удалены все задачи
     }
 
     @Override
     public void removeAllEpics() {
-        subtaskMap.clear(); //добавлена логика: если нет эпиков - значит, нет и подзадач
-        epicMap.clear();
+        for (Integer id : subtaskMap.keySet()) {
+            taskHistory.remove(id); //из истории удалены все запросы по подзадачам
+        }
+        subtaskMap.clear(); //удалены все подзадачи
+        for (Integer id : epicMap.keySet()) {
+            taskHistory.remove(id); //из истории удалены все запросы по эпикам
+        }
+        epicMap.clear(); //удалены все эпики
     }
 
     @Override
@@ -52,25 +62,37 @@ public class InMemoryTaskManager implements TaskManager {
              epic.getSubtasks().clear(); //очищены списки подзадач всех эпиков
              updateStatusOfEpic(epic); //обновлены статусы всех эпиков
          }
-         subtaskMap.clear();
+         for (Integer id : subtaskMap.keySet()) {
+            taskHistory.remove(id); //из истории удалены все запросы по подзадачам
+         }
+         subtaskMap.clear(); //удалены все подзадачи
     }
 
     @Override
     public Task getTaskById(int id) {
-        taskHistory.add(taskMap.get(id));
-        return taskMap.get(id);
+        if (taskMap.containsKey(id)) {
+            taskHistory.add(taskMap.get(id)); //задача добавлена в историю
+            return taskMap.get(id);
+        }
+        return null;
     }
 
     @Override
     public Epic getEpicById(int id) {
-        taskHistory.add(epicMap.get(id));
-        return epicMap.get(id);
+        if (epicMap.containsKey(id)) {
+            taskHistory.add(epicMap.get(id)); //эпик добавлен в историю
+            return epicMap.get(id);
+        }
+        return null;
     }
 
     @Override
     public Subtask getSubtaskById(int id) {
-        taskHistory.add(subtaskMap.get(id));
-        return subtaskMap.get(id);
+        if (subtaskMap.containsKey(id)) {
+            taskHistory.add(subtaskMap.get(id)); //подзадача добавлена в историю
+            return subtaskMap.get(id);
+        }
+        return null;
     }
 
     @Override
@@ -78,6 +100,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (!taskMap.containsKey(id)) {
             return;
         }
+        taskHistory.remove(id); //задача удалена из истории
         taskMap.remove(id);
     }
 
@@ -87,16 +110,21 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
         for (Subtask subtask : epicMap.get(id).getSubtasks()) {
-            subtaskMap.remove(subtask.getId()); //добавлена логика: если нет эпика - значит, нет и его подзадач
+            taskHistory.remove(subtask.getId()); //из истории удалены все запросы по подзадачам соответствующего эпика
+            subtaskMap.remove(subtask.getId()); //удалены все подзадачи соответствующего эпика
         }
+        taskHistory.remove(id); //эпик удалён из истории
         epicMap.remove(id);
     }
 
     @Override
     public void removeSubtaskById(int id) {
-        //подзадача удалена из списка подзадач соответствующего эпика
+        if (!subtaskMap.containsKey(id)) {
+            return;
+        } //подзадача удалена из списка подзадач соответствующего эпика
         epicMap.get(subtaskMap.get(id).getEpicId()).getSubtasks().remove(subtaskMap.get(id));
         updateStatusOfEpic(epicMap.get(subtaskMap.get(id).getEpicId())); //обновлён статус соответствующего эпика
+        taskHistory.remove(id); //подзадача удалена из истории
         subtaskMap.remove(id);
     }
 

@@ -28,57 +28,29 @@ public class Main {
         Subtask newSubtask2 = new Subtask("Название подзадачи 2", "описание подзадачи 2",
                 0, Status.NEW, epic1.getId());
         Subtask newSubtask3 = new Subtask("Название подзадачи 3", "описание подзадачи 3",
-                0, Status.NEW, epic2.getId());
+                0, Status.NEW, epic1.getId());
 
         Subtask subtask1 = manager.createSubtask(newSubtask1);
         Subtask subtask2 = manager.createSubtask(newSubtask2);
         Subtask subtask3 = manager.createSubtask(newSubtask3);
 
-        System.out.println(manager.getTaskById(task1.getId()));
-        System.out.println(manager.getHistory());
-        System.out.println(manager.getEpicById(epic1.getId()));
-        System.out.println(manager.getHistory());
-        System.out.println(manager.getSubtaskById(subtask1.getId()));
-        System.out.println(manager.getSubtaskById(subtask2.getId()));
-        System.out.println(manager.getSubtaskById(subtask3.getId()));
-        System.out.println(manager.getHistory());
-        System.out.println(manager.getTaskById(task2.getId())); //проверяем обозначенное ограничение по хранению
-        System.out.println(manager.getSubtaskById(subtask1.getId()));
-        System.out.println(manager.getSubtaskById(subtask2.getId()));
-        System.out.println(manager.getSubtaskById(subtask3.getId()));
-        System.out.println(manager.getTaskById(task1.getId()));
+        System.out.println(manager.getTaskById(task1.getId())); //запрашиваем всё, что создали
         System.out.println(manager.getTaskById(task2.getId()));
-        System.out.println(manager.getTaskById(task1.getId()));
-        System.out.println(manager.getHistory()); //должен вывести только задачи и подзадачи
+        System.out.println(manager.getEpicById(epic1.getId()));
+        System.out.println(manager.getEpicById(epic2.getId()));
+        System.out.println(manager.getSubtaskById(subtask1.getId()));
+        System.out.println(manager.getSubtaskById(subtask2.getId()));
+        System.out.println(manager.getSubtaskById(subtask3.getId()));
+        System.out.println(manager.getHistory()); //выводим историю
 
-//        System.out.println(manager.getAllTasks());
-//        System.out.println(manager.getAllEpics());
-//        System.out.println(manager.getAllSubtasks());
-//        System.out.println("Подзадачи эпика с ID=" + epic1.getId() + ": " + manager.getSubtasksByEpic(epic1.getId()));
-//
-//        Subtask newSubtask4 = new Subtask("Название подзадачи 4", "описание подзадачи 4",
-//                subtask1.getId(), Status.DONE, epic1.getId());
-//        Subtask newSubtask5 = new Subtask("Название подзадачи 5", "описание подзадачи 5",
-//                subtask3.getId(), Status.DONE, epic2.getId());
-//
-//        manager.updateSubtask(newSubtask4);
-//        manager.updateSubtask(newSubtask5);
-//
-//        System.out.println(manager.getAllTasks());
-//        System.out.println(manager.getAllEpics());
-//        System.out.println(manager.getAllSubtasks());
-//
-//        manager.removeTaskById(task1.getId());
-//        manager.removeEpicById(epic1.getId());
-//
-//        System.out.println(manager.getAllTasks());
-//        System.out.println(manager.getAllEpics());
-//        System.out.println(manager.getAllSubtasks());
-//
-//        manager.removeSubtaskById(newSubtask5.getId());
-//
-//        System.out.println(manager.getAllTasks());
-//        System.out.println(manager.getAllEpics());
-//        System.out.println(manager.getAllSubtasks());
+        System.out.println(manager.getTaskById(task1.getId())); //проверяем на наличие повторов
+        System.out.println(manager.getTaskById(task2.getId()));
+        System.out.println(manager.getHistory()); //повторов нет и ранее запрошенные задачи переместились куда нужно!
+
+        manager.removeTaskById(task1.getId()); //удалили задачу 1
+        System.out.println(manager.getHistory()); //в истории должно отобразиться всё, кроме задачи 1
+
+        manager.removeEpicById(epic1.getId()); //удалили эпик 1 и, соответственно, его подзадачи
+        System.out.println(manager.getHistory()); //теперь в истории остались только эпик 2 и задача 2
     }
 }
