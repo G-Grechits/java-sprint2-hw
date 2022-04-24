@@ -8,15 +8,14 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    Map<Integer, Node<Task>> nodeMap = new HashMap<>();
-
-    Node<Task> first;
-    Node<Task> last;
+    private Map<Integer, Node<Task>> nodeMap = new HashMap<>();
+    private Node<Task> first;
+    private Node<Task> last;
 
     private static class Node<E> {
-        E item;
-        Node<E> next;
-        Node<E> prev;
+        private E item;
+        private Node<E> next;
+        private Node<E> prev;
 
         Node(Node<E> prev, E element, Node<E> next) {
             this.item = element;
@@ -33,7 +32,9 @@ public class InMemoryHistoryManager implements HistoryManager {
             first = newNode;
         else
             l.next = newNode;
-        nodeMap.put(task.getId(), newNode);
+        nodeMap.put(task.getId(), newNode); /*не стал переносить этот кусочек в метод add(), т.к. в таком случае
+        для корректной работы нам потребуется изменить тип возвращаемого значения этого метода на Node<Task>
+        (если я правильно понял)*/
     }
 
     private void removeNode(Node<Task> node) {
@@ -49,8 +50,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             }
     }
 
-    private List<Task> getTasks() { /*честно говоря, понятия не имею, зачем нам этот метод, когда есть getHistory(),
-        но в подсказках по CustomLinkedList было указано его реализовать*/
+    private List<Task> getTasks() {
         List<Task> history = new ArrayList<>();
         Node<Task> node = first;
         while (node != null) {
