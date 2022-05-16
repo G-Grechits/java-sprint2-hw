@@ -32,9 +32,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             first = newNode;
         else
             l.next = newNode;
-        nodeMap.put(task.getId(), newNode); /*не стал переносить этот кусочек в метод add(), т.к. в таком случае
-        для корректной работы нам потребуется изменить тип возвращаемого значения этого метода на Node<Task>
-        (если я правильно понял)*/
+        nodeMap.put(task.getId(), newNode);
     }
 
     private void removeNode(Node<Task> node) {

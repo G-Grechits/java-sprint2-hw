@@ -8,49 +8,25 @@ import tasks.Task;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Тестовый прогон!"); //взял в качестве примера модель тестирования из ТЗ
+        System.out.println("Тестовый прогон!");
 
-        TaskManager manager = Managers.getDefault();
-        Task newTask1 = new Task("Название задачи 1", "описание задачи 1", 0, Status.NEW);
-        Task newTask2 = new Task("Название задачи 2", "описание задачи 2", 0, Status.NEW);
+        TaskManager manager = Managers.getManagerWithCSVSerialization("file.csv");
 
-        Task task1 = manager.createTask(newTask1);
-        Task task2 = manager.createTask(newTask2);
+        Task task1 = manager.createTask(new Task("Task1", "Description task1", 0, Status.NEW));
+        Task task2 = manager.createTask(new Task("Task2", "Description task2", 0, Status.NEW));
 
-        Epic newEpic1 = new Epic("Название эпика 1", "описание эпика 1", 0, Status.NEW);
-        Epic newEpic2 = new Epic("Название эпика 2", "описание эпика 2", 0, Status.NEW);
+        Epic epic1 = manager.createEpic(new Epic("Epic1", "Description epic1", 0, Status.NEW));
+        Epic epic2 = manager.createEpic(new Epic("Epic2", "Description epic2", 0, Status.NEW));
 
-        Epic epic1 = manager.createEpic(newEpic1);
-        Epic epic2 = manager.createEpic(newEpic2);
+        Subtask subtask1 = manager.createSubtask(new Subtask("Subtask1", "Description subtask1",
+                0, Status.NEW, epic1.getId()));
+        Subtask subtask2 = manager.createSubtask(new Subtask("Subtask2", "Description subtask2",
+                0, Status.NEW, epic2.getId()));
+        Subtask subtask3 = manager.createSubtask(new Subtask("Subtask3", "Description subtask3",
+                0, Status.NEW, epic2.getId()));
 
-        Subtask newSubtask1 = new Subtask("Название подзадачи 1", "описание подзадачи 1",
-                0, Status.NEW, epic1.getId());
-        Subtask newSubtask2 = new Subtask("Название подзадачи 2", "описание подзадачи 2",
-                0, Status.NEW, epic1.getId());
-        Subtask newSubtask3 = new Subtask("Название подзадачи 3", "описание подзадачи 3",
-                0, Status.NEW, epic1.getId());
-
-        Subtask subtask1 = manager.createSubtask(newSubtask1);
-        Subtask subtask2 = manager.createSubtask(newSubtask2);
-        Subtask subtask3 = manager.createSubtask(newSubtask3);
-
-        System.out.println(manager.getTaskById(task1.getId())); //запрашиваем всё, что создали
-        System.out.println(manager.getTaskById(task2.getId()));
-        System.out.println(manager.getEpicById(epic1.getId()));
-        System.out.println(manager.getEpicById(epic2.getId()));
-        System.out.println(manager.getSubtaskById(subtask1.getId()));
-        System.out.println(manager.getSubtaskById(subtask2.getId()));
-        System.out.println(manager.getSubtaskById(subtask3.getId()));
-        System.out.println(manager.getHistory()); //выводим историю
-
-        System.out.println(manager.getTaskById(task1.getId())); //проверяем на наличие повторов
-        System.out.println(manager.getTaskById(task2.getId()));
-        System.out.println(manager.getHistory()); //повторов нет и ранее запрошенные задачи переместились куда нужно!
-
-        manager.removeTaskById(task1.getId()); //удалили задачу 1
-        System.out.println(manager.getHistory()); //в истории должно отобразиться всё, кроме задачи 1
-
-        manager.removeEpicById(epic1.getId()); //удалили эпик 1 и, соответственно, его подзадачи
-        System.out.println(manager.getHistory()); //теперь в истории остались только эпик 2 и задача 2
+        manager.getTaskById(task2.getId());
+        manager.getEpicById(epic2.getId());
+        manager.getSubtaskById(subtask2.getId());
     }
 }

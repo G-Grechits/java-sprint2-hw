@@ -13,6 +13,14 @@ public class Task {
         this.status = status;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     public int getId() {
         return id;
     }
@@ -27,6 +35,10 @@ public class Task {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Type getType() {
+        return Type.TASK;
     }
 
     @Override
