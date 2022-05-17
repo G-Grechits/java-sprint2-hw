@@ -1,5 +1,6 @@
 package manager;
 
+import exception.ManagerSaveException;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -21,7 +22,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public static void main(String[] args) {
-        loadFromFile("file.csv");
     }
 
     public static FileBackedTaskManager loadFromFile(String file) {
@@ -59,6 +59,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             int maxId = 0;
             while (true) {
                 String line = reader.readLine();
+                if (line.isEmpty()) {
+                    break;
+                }
                 String[] attribute = line.split(",");
                 Task task = CSVCreator.makeTaskFromString(line);
                 if (task.getId() > maxId) {
@@ -77,11 +80,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         epicMap.get(((Subtask) task).getEpicId()).getSubtasks().add((Subtask) task);
                         break;
                 }
-                if (line.isEmpty()) {
-                    break;
-                }
             }
-            reader.readLine();
             String line = reader.readLine();
             List<Integer> history = CSVCreator.makeHistoryFromString(line);
             for (Integer id : history) {

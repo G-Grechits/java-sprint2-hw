@@ -1,3 +1,4 @@
+import manager.FileBackedTaskManager;
 import manager.Managers;
 import manager.TaskManager;
 import tasks.Status;
@@ -10,7 +11,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Тестовый прогон!");
 
-        TaskManager manager = Managers.getManagerWithCSVSerialization("file.csv");
+        TaskManager manager = Managers.getManagerWithCSVSerialization("resources/file.csv");
 
         Task task1 = manager.createTask(new Task("Task1", "Description task1", 0, Status.NEW));
         Task task2 = manager.createTask(new Task("Task2", "Description task2", 0, Status.NEW));
@@ -28,5 +29,15 @@ public class Main {
         manager.getTaskById(task2.getId());
         manager.getEpicById(epic2.getId());
         manager.getSubtaskById(subtask2.getId());
+
+        System.out.println("Старая история:");
+        for (Task task : manager.getHistory()) {
+            System.out.println(task);
+        }
+        TaskManager loadManager = FileBackedTaskManager.loadFromFile("resources/file.csv");
+        System.out.println("Загруженная история:");
+        for (Task task : loadManager.getHistory()) {
+            System.out.println(task);
+        }
     }
 }
