@@ -1,10 +1,14 @@
 package tasks;
 
+import java.time.LocalDateTime;
+
 public class Task {
     protected String name;
     protected String description;
     protected int id;
     protected Status status;
+    protected int duration;
+    protected LocalDateTime startTime;
 
     public Task(String name, String description, int id, Status status) {
         this.name = name;
@@ -35,6 +39,18 @@ public class Task {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plusMinutes(duration);
     }
 
     public Type getType() {
