@@ -1,10 +1,12 @@
 package tasks;
 
+import java.time.LocalDateTime;
+
 public class Subtask extends Task {
     private int epicId;
 
-    public Subtask(String name, String description, int id, Status status, int epicId) {
-        super(name, description, id, status);
+    public Subtask(String name, String description, int id, Status status, long duration, LocalDateTime startTime, int epicId) {
+        super(name, description, id, status, duration, startTime);
         this.epicId = epicId;
     }
 

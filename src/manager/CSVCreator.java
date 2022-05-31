@@ -6,17 +6,24 @@ import tasks.Task;
 import tasks.Status;
 import tasks.Type;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ArrayList;
 
 public class CSVCreator {
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     public static String turnTaskToString(Task task) {
         StringBuilder taskInLine = new StringBuilder();
         taskInLine.append(task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() + ","
                 + task.getDescription());
-        if (task.getType().equals(Type.SUBTASK)) {
-            taskInLine.append("," + ((Subtask) task).getEpicId());
+        if (task.getType().equals(Type.TASK) || task.getType().equals(Type.EPIC)) {
+            taskInLine.append("," + " " + "," + task.getDuration() + "," + task.getStartTime().format(formatter)
+                    + "," + task.getEndTime().format(formatter));
+        } else {
+            taskInLine.append("," + ((Subtask) task).getEpicId() + "," + task.getDuration() + ","
+                    + task.getStartTime().format(formatter) + "," + task.getEndTime().format(formatter));
         }
         return taskInLine.toString();
     }
@@ -29,13 +36,15 @@ public class CSVCreator {
         switch (attribute[1]) {
             case "TASK":
                 return new Task(attribute[2], attribute[4], Integer.parseInt(attribute[0]),
-                        Status.valueOf(attribute[3]));
+                        Status.valueOf(attribute[3]), Long.parseLong(attribute[6]),
+                        LocalDateTime.parse(attribute[7], formatter));
             case "EPIC":
                 return new Epic(attribute[2], attribute[4], Integer.parseInt(attribute[0]),
                         Status.valueOf(attribute[3]));
             case "SUBTASK":
                 return new Subtask(attribute[2], attribute[4], Integer.parseInt(attribute[0]),
-                        Status.valueOf(attribute[3]), Integer.parseInt(attribute[5]));
+                        Status.valueOf(attribute[3]), Long.parseLong(attribute[6]),
+                        LocalDateTime.parse(attribute[7], formatter), Integer.parseInt(attribute[5]));
         }
         return null;
     }

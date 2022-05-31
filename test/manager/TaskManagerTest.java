@@ -7,6 +7,8 @@ import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
 
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,10 +21,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @BeforeEach
     void initializeAttributes() {
-        task = manager.createTask(new Task("Task1", "Task1 description", 0, Status.NEW));
+        task = manager.createTask(new Task("Task1", "Task1 description", 0, Status.NEW,
+                60L, LocalDateTime.of(2022, Month.JUNE, 1, 12, 0)));
         epic = manager.createEpic(new Epic("Epic1", "Epic1 description", 0, Status.NEW));
         subtask = manager.createSubtask(new Subtask("Subtask1", "Subtask1 description", 0,
-                Status.NEW, epic.getId()));
+                Status.NEW, 30L, LocalDateTime.of(2022, Month.JUNE, 2, 11, 0),
+                epic.getId()));
     }
 
     @Test
@@ -261,7 +265,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void updateTask() {
-        Task newTask = new Task("Task2", "Task2 description", task.getId(), Status.NEW);
+        Task newTask = new Task("Task2", "Task2 description", task.getId(), Status.NEW,
+                60L, LocalDateTime.of(2022, Month.JUNE, 1, 12, 0));
         manager.updateTask(newTask);
 
         assertEquals(1, manager.getAllTasks().size(), "Количество задач в списке изменяется.");
@@ -279,8 +284,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void updateSubtask() {
-        Subtask newSubtask = new Subtask("Subtask2", "Subtask2 description", subtask.getId(),
-                Status.NEW, epic.getId());
+        Subtask newSubtask = new Subtask("Subtask2", "Subtask2 description", subtask.getId(), Status.NEW,
+                30L, LocalDateTime.of(2022, Month.JUNE, 2, 11, 0), epic.getId());
         manager.updateSubtask(newSubtask);
 
         assertEquals(1, manager.getAllSubtasks().size(), "Количество подзадач в списке изменяется.");
@@ -318,9 +323,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
     void updateStatusOfEpicWhenAllSubtasksAreNew() {
         Epic newEpic = manager.createEpic(new Epic("Epic2", "Epic2 description", 0, Status.DONE));
         Subtask newSubtask1 = manager.createSubtask(new Subtask("Subtask2", "Subtask2 description",
-                0, Status.NEW, newEpic.getId()));
+                0, Status.NEW, 30L, LocalDateTime.of(2022, Month.JUNE, 2, 13, 0),
+                newEpic.getId()));
         Subtask newSubtask2 = manager.createSubtask(new Subtask("Subtask3", "Subtask3 description",
-                0, Status.NEW, newEpic.getId()));
+                0, Status.NEW, 30L, LocalDateTime.of(2022, Month.JUNE, 2, 14, 0),
+                newEpic.getId()));
 
         assertEquals(2, newEpic.getSubtasks().size(), "Неверное количество подзадач в списке эпика.");
         assertEquals(newSubtask1, newEpic.getSubtasks().get(0), "Подзадачи не совпадают.");
@@ -333,9 +340,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
     void updateStatusOfEpicWhenAllSubtasksAreDone() {
         Epic newEpic = manager.createEpic(new Epic("Epic2", "Epic2 description", 0, Status.NEW));
         Subtask newSubtask1 = manager.createSubtask(new Subtask("Subtask2", "Subtask2 description",
-                0, Status.DONE, newEpic.getId()));
+                0, Status.DONE, 30L, LocalDateTime.of(2022, Month.JUNE, 2, 13, 0),
+                newEpic.getId()));
         Subtask newSubtask2 = manager.createSubtask(new Subtask("Subtask3", "Subtask3 description",
-                0, Status.DONE, newEpic.getId()));
+                0, Status.DONE, 30L, LocalDateTime.of(2022, Month.JUNE, 2, 14, 0),
+                newEpic.getId()));
 
         assertEquals(2, newEpic.getSubtasks().size(), "Неверное количество подзадач в списке эпика.");
         assertEquals(newSubtask1, newEpic.getSubtasks().get(0), "Подзадачи не совпадают.");
@@ -347,9 +356,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
     void updateStatusOfEpicWhenAllSubtasksAreNewAndDone() {
         Epic newEpic = manager.createEpic(new Epic("Epic2", "Epic2 description", 0, Status.NEW));
         Subtask newSubtask1 = manager.createSubtask(new Subtask("Subtask2", "Subtask2 description",
-                0, Status.NEW, newEpic.getId()));
+                0, Status.NEW, 30L, LocalDateTime.of(2022, Month.JUNE, 2, 13, 0),
+                newEpic.getId()));
         Subtask newSubtask2 = manager.createSubtask(new Subtask("Subtask3", "Subtask3 description",
-                0, Status.DONE, newEpic.getId()));
+                0, Status.DONE, 30L, LocalDateTime.of(2022, Month.JUNE, 2, 14, 0),
+                newEpic.getId()));
 
         assertEquals(2, newEpic.getSubtasks().size(), "Неверное количество подзадач в списке эпика.");
         assertEquals(newSubtask1, newEpic.getSubtasks().get(0), "Подзадачи не совпадают.");
@@ -362,9 +373,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
     void updateStatusOfEpicWhenAllSubtasksAreInProgress() {
         Epic newEpic = manager.createEpic(new Epic("Epic2", "Epic2 description", 0, Status.DONE));
         Subtask newSubtask1 = manager.createSubtask(new Subtask("Subtask2", "Subtask2 description",
-                0, Status.IN_PROGRESS, newEpic.getId()));
+                0, Status.IN_PROGRESS, 30L,
+                LocalDateTime.of(2022, Month.JUNE, 2, 13, 0), newEpic.getId()));
         Subtask newSubtask2 = manager.createSubtask(new Subtask("Subtask3", "Subtask3 description",
-                0, Status.IN_PROGRESS, newEpic.getId()));
+                0, Status.IN_PROGRESS, 30L,
+                LocalDateTime.of(2022, Month.JUNE, 2, 14, 0), newEpic.getId()));
 
         assertEquals(2, newEpic.getSubtasks().size(), "Неверное количество подзадач в списке эпика.");
         assertEquals(newSubtask1, newEpic.getSubtasks().get(0), "Подзадачи не совпадают.");

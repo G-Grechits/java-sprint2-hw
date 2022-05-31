@@ -7,6 +7,8 @@ import tasks.Task;
 import java.util.List;
 
 public interface TaskManager {
+    List<Task> getPrioritizedTasks(); //метод получения списка задач в порядке приоритета
+
     List<Task> getHistory(); //метод получения истории просмотров
 
     List<Task> getAllTasks(); //метод получения списка всех задач
@@ -46,6 +48,4 @@ public interface TaskManager {
     void updateSubtask(Subtask subtask); //метод обновления подзадачи
 
     List<Subtask> getSubtasksByEpic(int epicId); //метод получения списка всех подзадач определённого эпика
-
-    void updateStatusOfEpic(Epic epic); //метод обновления статуса эпика
 }

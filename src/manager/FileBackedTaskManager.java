@@ -29,7 +29,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
-            writer.append("id,type,name,status,description,epic");
+            writer.append("id,type,name,status,description,epic,duration,start time, end time");
             writer.newLine();
             for (Map.Entry<Integer, Task> entry : taskMap.entrySet()) {
                 writer.append(CSVCreator.turnTaskToString(entry.getValue()));
