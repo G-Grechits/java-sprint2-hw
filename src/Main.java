@@ -1,8 +1,8 @@
 import manager.FileBackedTaskManager;
 import manager.Managers;
 import manager.TaskManager;
-import tasks.Status;
 import tasks.Epic;
+import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
 
@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Тестовый прогон!");
 
-        String fileName = "file2.csv";
+        String fileName = "file1.csv";
         TaskManager manager = Managers.getManagerWithCSVSerialization("resources/" + fileName);
 
         Task task1 = manager.createTask(new Task("Task1", "Task1 description", 0, Status.NEW,

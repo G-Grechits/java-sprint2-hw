@@ -6,8 +6,11 @@ import tasks.Epic;
 import tasks.Status;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.Month;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     String filePath = "test/resources/file1.csv";
@@ -35,7 +38,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
             writer.close();
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
             reader.readLine();
-            assertNull(reader.readLine());
+            assertNull(reader.readLine(), "Строка в файле не равна null.");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,13 +48,17 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     void saveEpicWithoutSubtasks() {
         clearFile();
         manager = new FileBackedTaskManager(filePath);
-        manager.createEpic(new Epic("Epic1", "Epic1 description", 0, Status.NEW));
+        Epic newEpic = new Epic("Epic1", "Epic1 description", 0, Status.NEW);
+        LocalDateTime dateTime = LocalDateTime.of(2022, Month.JUNE,1,18,30);
+        newEpic.setStartTime(dateTime);
+        newEpic.setEndTime(dateTime);
+        manager.createEpic(newEpic);
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
             reader.readLine();
-            assertEquals("1,EPIC,Epic1,NEW,Epic1 description, ,0,31.05.2022 03:54,31.05.2022 03:54",
-                    reader.readLine());
+            assertEquals("1,EPIC,Epic1,NEW,Epic1 description, ,0,01.06.2022 18:30,01.06.2022 18:30",
+                    reader.readLine(), "Выводимые строки не совпадают.");
 
         } catch (IOException e) {
             e.printStackTrace();
