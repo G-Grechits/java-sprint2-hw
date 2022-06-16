@@ -35,7 +35,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
         Epic newEpic = new Epic("Epic №1", "Test epic №1", 2, Status.NEW);
         manager.createEpic(newEpic);
         Subtask newSubtask = manager.createSubtask(new Subtask("Subtask №1", "Test subtask №1", 3, Status.IN_PROGRESS,
-                96, LocalDateTime.of(2021, 04, 11, 12, 00), newEpic.getId()));
+                90, LocalDateTime.of(2021, 04, 11, 12, 00), newEpic.getId()));
         assertEquals(2, manager.getPrioritizedTasks().size());
         assertThrows(
                 TaskValidationException.class,

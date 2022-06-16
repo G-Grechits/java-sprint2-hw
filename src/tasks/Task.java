@@ -69,11 +69,14 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Задача{" +
-                "название: '" + name + '\'' +
-                ", описание: '" + description + '\'' +
-                ", ID = " + id +
-                ", статус: '" + status + '\'' +
+        return "Task{" +
+                "name:'" + name + '\'' +
+                ", description:'" + description + '\'' +
+                ", id=" + id +
+                ", status:" + status +
+                ", duration:" + duration +
+                ", startTime:" + startTime +
+                ", endTime:" + getEndTime() +
                 '}';
     }
 }

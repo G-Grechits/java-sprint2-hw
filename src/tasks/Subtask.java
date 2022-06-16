@@ -21,12 +21,15 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Подзадача{" +
-                "название: '" + name + '\'' +
-                ", описание: '" + description + '\'' +
-                ", ID = " + id +
-                ", статус: '" + status + '\'' +
-                ", ID эпика = " + epicId +
+        return "Subtask{" +
+                "epicId=" + epicId +
+                ", name:'" + name + '\'' +
+                ", description:'" + description + '\'' +
+                ", id=" + id +
+                ", status:" + status +
+                ", duration:" + duration +
+                ", startTime:" + startTime +
+                ", endTime:" + getEndTime() +
                 '}';
     }
 }

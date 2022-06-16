@@ -11,10 +11,14 @@ import java.util.List;
 import java.util.Map;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private final String file;
+    private String file;
 
     public FileBackedTaskManager(String file) {
         this.file = file;
+    }
+
+    public FileBackedTaskManager() {
+
     }
 
     public static FileBackedTaskManager loadFromFile(String file) {
@@ -23,7 +27,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return manager;
     }
 
-    private void save() {
+    public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
             writer.append("id,type,name,status,description,epic,duration,start time, end time");
             writer.newLine();
@@ -46,7 +50,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    private void load() {
+    public void load() {
         try (BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             reader.readLine();
             int maxId = 0;
@@ -109,6 +113,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Subtask subtask = super.getSubtaskById(id);
         save();
         return subtask;
+    }
+
+    @Override
+    public void removeTaskById(int id) {
+        super.removeTaskById(id);
+        save();
+    }
+
+    @Override
+    public void removeEpicById(int id) {
+        super.removeEpicById(id);
+        save();
+    }
+
+    @Override
+    public void removeSubtaskById(int id) {
+        super.removeSubtaskById(id);
+        save();
     }
 
     @Override

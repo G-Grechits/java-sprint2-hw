@@ -6,7 +6,7 @@ public class Managers {
         return new InMemoryTaskManager();
     }
 
-    public static TaskManager getManagerWithCSVSerialization(String file) {
+    public static TaskManager getManagerWithStorageInFile(String file) {
         return new FileBackedTaskManager(file);
     }
 
