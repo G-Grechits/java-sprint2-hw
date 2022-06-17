@@ -14,9 +14,8 @@ public class Main {
         System.out.println("Тестовый прогон!");
 
         KVServer kvServer = new KVServer();
-        HttpTaskServer taskServer = new HttpTaskServer();
-
         kvServer.start();
+        HttpTaskServer taskServer = new HttpTaskServer();
         taskServer.start();
 
 //        String fileName = "file2.csv";
