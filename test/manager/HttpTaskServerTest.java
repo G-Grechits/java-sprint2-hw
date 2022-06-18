@@ -530,8 +530,6 @@ class HttpTaskServerTest {
         HttpResponse<String> responseOfGet = client.send(requestOfGet, HttpResponse.BodyHandlers.ofString());
 
         assertTrue(responseOfGet.body().contains(task1.getName()));
-        Task task = gson.fromJson(responseOfGet.body(), Task.class);
-        System.out.println(task.getId());
 
         URI urlOfRemove = URI.create("http://localhost:8080/tasks/task/?id=1");
         HttpRequest requestOfRemove = HttpRequest.newBuilder().uri(urlOfRemove).DELETE().build();
@@ -544,6 +542,67 @@ class HttpTaskServerTest {
         HttpResponse<String> responseOfNotGet = client.send(requestOfNotGet, HttpResponse.BodyHandlers.ofString());
 
         assertFalse(responseOfNotGet.body().contains(task1.getName()));
+    }
+
+    @Test
+    public void removeEpicById() throws IOException, InterruptedException {
+        URI url = URI.create("http://localhost:8080/tasks/epic/");
+        String json = gson.toJson(epic1);
+        HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
+        HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
+        client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        URI urlOfGet = URI.create("http://localhost:8080/tasks/epic/?id=1");
+        HttpRequest requestOfGet = HttpRequest.newBuilder().uri(urlOfGet).GET().build();
+        HttpResponse<String> responseOfGet = client.send(requestOfGet, HttpResponse.BodyHandlers.ofString());
+
+        assertTrue(responseOfGet.body().contains(epic1.getName()));
+
+        URI urlOfRemove = URI.create("http://localhost:8080/tasks/epic/?id=1");
+        HttpRequest requestOfRemove = HttpRequest.newBuilder().uri(urlOfRemove).DELETE().build();
+        HttpResponse<String> responseOfRemove = client.send(requestOfRemove, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(201, responseOfRemove.statusCode());
+
+        URI urlOfNotGet = URI.create("http://localhost:8080/tasks/epic/");
+        HttpRequest requestOfNotGet = HttpRequest.newBuilder().uri(urlOfNotGet).GET().build();
+        HttpResponse<String> responseOfNotGet = client.send(requestOfNotGet, HttpResponse.BodyHandlers.ofString());
+
+        assertFalse(responseOfNotGet.body().contains(epic1.getName()));
+    }
+
+    @Test
+    public void removeSubtaskById() throws IOException, InterruptedException {
+        URI urlOfEpic = URI.create("http://localhost:8080/tasks/epic/");
+        String jsonOfEpic = gson.toJson(epic1);
+        HttpRequest.BodyPublisher bodyOfEpic = HttpRequest.BodyPublishers.ofString(jsonOfEpic);
+        HttpRequest requestOfEpic = HttpRequest.newBuilder().uri(urlOfEpic).POST(bodyOfEpic).build();
+        client.send(requestOfEpic, HttpResponse.BodyHandlers.ofString());
+
+        URI url = URI.create("http://localhost:8080/tasks/subtask/");
+        subtask1.setEpicId(1);
+        String json = gson.toJson(subtask1);
+        HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
+        HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
+        client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        URI urlOfGet = URI.create("http://localhost:8080/tasks/subtask/?id=2");
+        HttpRequest requestOfGet = HttpRequest.newBuilder().uri(urlOfGet).GET().build();
+        HttpResponse<String> responseOfGet = client.send(requestOfGet, HttpResponse.BodyHandlers.ofString());
+
+        assertTrue(responseOfGet.body().contains(subtask1.getName()));
+
+        URI urlOfRemove = URI.create("http://localhost:8080/tasks/subtask/?id=2");
+        HttpRequest requestOfRemove = HttpRequest.newBuilder().uri(urlOfRemove).DELETE().build();
+        HttpResponse<String> responseOfRemove = client.send(requestOfRemove, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(201, responseOfRemove.statusCode());
+
+        URI urlOfNotGet = URI.create("http://localhost:8080/tasks/subtask/");
+        HttpRequest requestOfNotGet = HttpRequest.newBuilder().uri(urlOfNotGet).GET().build();
+        HttpResponse<String> responseOfNotGet = client.send(requestOfNotGet, HttpResponse.BodyHandlers.ofString());
+
+        assertFalse(responseOfNotGet.body().contains(subtask1.getName()));
     }
 
     @Test

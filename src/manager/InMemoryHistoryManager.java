@@ -37,8 +37,8 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private void removeNode(Node<Task> node) {
             if (node == first) {
-                first = first.next;
                 first.prev = null;
+                first = first.next;
             } else if (node == last) {
                 last = last.prev;
                 last.next = null;
